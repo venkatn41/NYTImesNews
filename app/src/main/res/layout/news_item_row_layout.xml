@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+					 android:layout_width="match_parent"
+					 android:layout_height="90dp"
+					 android:paddingLeft="16dp"
+					 android:paddingRight="16dp"
+					 android:paddingTop="10dp"
+					 android:paddingBottom="10dp"
+					 android:clickable="true">
+
+	<ImageView
+		android:id="@+id/news_item_image"
+		android:layout_width="80dp"
+		android:layout_height="80dp" />
+
+	<TextView
+		android:id="@+id/news_title"
+		android:layout_width="275dp"
+		android:layout_height="50dp"
+		android:textSize="20dp"
+		android:textStyle="bold"
+		android:maxLines="3"
+		android:layout_toRightOf="@id/news_item_image"
+		android:text="India is worlds new nuclear power house"
+		android:layout_marginLeft="10dp"/>
+
+
+
+	<TextView
+		android:id="@+id/date"
+		android:layout_width="100dp"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@+id/news_item_image"
+		android:layout_alignParentBottom="true"
+		android:text="06-21-2018"
+		android:layout_marginLeft="10dp"/>
+
+</RelativeLayout>

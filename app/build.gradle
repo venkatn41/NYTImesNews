@@ -1,0 +1,71 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.example.venkatnutalapati.nytimesnews"
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+	kapt {
+		generateStubs = true
+	}
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:28.0.0-rc01'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'com.android.support:design:28.0.0-rc01'
+	 implementation 'com.bluelinelabs:conductor:2.1.5'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+	 //Dagger Dependencies injection
+	 implementation "com.google.dagger:dagger:2.9"
+	 annotationProcessor "com.google.dagger:dagger-compiler:2.9"
+	 kapt 'com.google.dagger:dagger-compiler:2.11'
+	 compileOnly 'javax.annotation:jsr250-api:1.0'
+
+	implementation "android.arch.lifecycle:extensions:1.1.0"
+	implementation "android.arch.lifecycle:viewmodel:1.1.0"
+
+	 implementation 'android.arch.paging:runtime:1.0.0'
+
+	 //Butterknife
+	 implementation 'com.jakewharton:butterknife:8.5.1'
+	 annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+
+	 //Rx
+	implementation "io.reactivex.rxjava2:rxjava:2.2.1"
+	implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+	implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+
+	 implementation 'com.squareup.picasso:picasso:2.71828'
+
+	 //Conductor
+	 implementation 'com.bluelinelabs:conductor:2.1.5'
+
+	 //Networking
+	 implementation 'com.google.code.gson:gson:2.7'
+	 implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+	 implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+	 implementation 'com.squareup.okhttp3:logging-interceptor:3.3.0'
+}
