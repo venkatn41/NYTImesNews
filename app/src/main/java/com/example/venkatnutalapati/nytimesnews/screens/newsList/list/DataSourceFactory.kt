@@ -7,14 +7,14 @@ import com.example.venkatnutalapati.nytimesnews.api.NYNewsApi
 import com.example.venkatnutalapati.nytimesnews.models.NewsObj
 import io.reactivex.disposables.CompositeDisposable
 
-class DataSourceFactory (private val newsApi : NYNewsApi, private val disposable : CompositeDisposable)
-										: DataSource.Factory<Long, NewsObj>() {
+class DataSourceFactory (private val newsApi : NYNewsApi,
+                         private val disposable : CompositeDisposable,
+                         private val query : String) : DataSource.Factory<Long, NewsObj>() {
 
 	val newsDataSourceLiveData = MutableLiveData<NewsFeedDatasource>()
 
 	override fun create(): DataSource<Long, NewsObj> {
-		Log.d("venkat","Creating data source")
-		val newsFeedDatasource = NewsFeedDatasource(newsApi, disposable)
+		val newsFeedDatasource = NewsFeedDatasource(newsApi, disposable, query)
 		newsDataSourceLiveData.postValue(newsFeedDatasource)
 		return newsFeedDatasource
 	}

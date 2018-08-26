@@ -41,6 +41,7 @@
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
 		android:layout_below="@+id/actionbar"
+		android:visibility="invisible"
 		app:layout_constraintTop_toTopOf="@+id/usersSwipeRefreshLayout" />
 
 
