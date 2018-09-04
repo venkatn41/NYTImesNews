@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.venkatnutalapati.nytimesnews.R
+import com.example.venkatnutalapati.nytimesnews.models.Multimedia
 import com.example.venkatnutalapati.nytimesnews.models.NewsObj
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.news_item_row_layout.view.*
@@ -18,9 +20,14 @@ class NewsListViewHolder(internal var view: View) : RecyclerView.ViewHolder(view
 
       itemView.news_title.text = newsItem.headline?.main
 
-      Glide.with(itemView.context)
-         .load(BASE_IMAGE_URL + newsItem?.multimedia?.get(0)?.url)
-         .into(itemView.news_item_image)
+      val size = newsItem.multimedia?.size ?: -1
+
+      if(size != -1 && size > 0) {
+         Glide.with(itemView.context)
+            .load(BASE_IMAGE_URL + newsItem.multimedia?.get(0)?.url)
+            .apply(RequestOptions().placeholder(R.drawable.loadme))
+            .into(itemView.news_item_image)
+      }
 
       itemView.setOnClickListener {
          subject.onNext(newsItem)

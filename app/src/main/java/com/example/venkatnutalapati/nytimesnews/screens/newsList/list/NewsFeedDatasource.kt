@@ -66,11 +66,12 @@ class NewsFeedDatasource(val newsApi: NYNewsApi, val compositeDisposable: Compos
          compositeDisposable.add(retryCompletable!!
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ }, { }))
+            .subscribe({ }, { Log.e("error","retry error")}))
       }
    }
 
    private fun setRetry(action: Action?) {
+      Log.d("retry","setRetry :"+action)
       if (action == null) {
          this.retryCompletable = null
       } else {

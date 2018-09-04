@@ -13,7 +13,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
-import butterknife.ButterKnife
 
 import kotlinx.android.synthetic.main.activity_main.*
 import com.example.venkatnutalapati.nytimesnews.R
@@ -34,14 +33,14 @@ class MainListActivity : AppCompatActivity() {
 
    private lateinit var newsAdapter: NewsListAdapter
 
-   lateinit var detailedIntent: Intent
+   private lateinit var detailedIntent: Intent
 
    override fun onCreate(savedInstanceState: Bundle?) {
       super.onCreate(savedInstanceState)
       setContentView(R.layout.activity_main)
       setSupportActionBar(toolbar)
-      ButterKnife.bind(this)
       newsViewModel = ViewModelProviders.of(this).get(NewsListViewModel::class.java)
+      initAdapter()
    }
 
    override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -56,7 +55,7 @@ class MainListActivity : AppCompatActivity() {
       (menu.findItem(R.id.search_box)?.actionView as SearchView).setOnQueryTextListener(object : SearchView.OnQueryTextListener {
          override fun onQueryTextSubmit(query: String): Boolean {
             newsViewModel.setQuery(query)
-            initAdapter()
+            initNewsList()
             initSwipeToRefresh()
             return false
          }
@@ -84,12 +83,21 @@ class MainListActivity : AppCompatActivity() {
       newsRecyclerView.adapter = newsAdapter
       newsRecyclerView.addItemDecoration(SimpleDividerItemDecoration(this))
 
-      newsViewModel.newsList.observe(this, Observer<PagedList<NewsObj>> { newsAdapter.submitList(it) })
-      newsViewModel.getNetworkState().observe(this, Observer<NetworkState> { newsAdapter.setNetworkState(it) })
-
       //Recyclerview click listener
-      newsAdapter.clickSubjectAdapter.subscribe({
+      newsAdapter.clickSubjectAdapter.subscribe {
          clickListener(it)
+      }
+
+      newsSwipeRefreshLayout.setOnRefreshListener { newsViewModel.refresh() }
+   }
+
+   private fun initNewsList() {
+      newsViewModel.newsList.observe(this, Observer<PagedList<NewsObj>> {
+         newsAdapter.submitList(it)
+      })
+
+      newsViewModel.getNetworkState().observe(this, Observer<NetworkState> {
+         newsAdapter.setNetworkState(it)
       })
    }
 
@@ -102,18 +110,17 @@ class MainListActivity : AppCompatActivity() {
    }
 
    private fun initSwipeToRefresh() {
-      newsViewModel.getRefreshState().observe(this, Observer { networkState ->
+      newsViewModel.getRefreshState().observe(this, Observer {
          if (newsAdapter.currentList != null) {
             if (newsAdapter.currentList!!.size > 0) {
-               usersSwipeRefreshLayout.isRefreshing = networkState?.status == NetworkState.LOADING.status
+               newsSwipeRefreshLayout.isRefreshing = it?.status == NetworkState.LOADING.status
             } else {
-               setInitialLoadingState(networkState)
+               setInitialLoadingState(it)
             }
          } else {
-            setInitialLoadingState(networkState)
+            setInitialLoadingState(it)
          }
       })
-      usersSwipeRefreshLayout.setOnRefreshListener({ newsViewModel.refresh() })
    }
 
    private fun setInitialLoadingState(networkState: NetworkState?) {
@@ -125,9 +132,9 @@ class MainListActivity : AppCompatActivity() {
 
       //loading and retry
       retryLoadingButton.visibility = if (networkState?.status == Status.FAILED) View.VISIBLE else View.GONE
-      loadingProgressBar.visibility = if (networkState?.status == Status.RUNNING) View.VISIBLE else View.GONE
+      loadingProgress.visibility = if (networkState?.status == Status.RUNNING) View.VISIBLE else View.GONE
 
-      usersSwipeRefreshLayout.isEnabled = networkState?.status == Status.SUCCESS
+      newsSwipeRefreshLayout.isEnabled = networkState?.status == Status.SUCCESS
       retryLoadingButton.setOnClickListener { newsViewModel.retry() }
    }
 }

@@ -18,15 +18,20 @@ class NewsListViewModel : ViewModel() {
 
    private val pageSize = 10
 
-   lateinit var sourceFactory: DataSourceFactory
+   private lateinit var sourceFactory: DataSourceFactory
 
-   fun setQuery(query: String) {
-      sourceFactory = DataSourceFactory(NYNewsApi.getService(), compositeDisposable, query)
-      val config = PagedList.Config.Builder()
+   private var config : PagedList.Config
+
+   init {
+      config = PagedList.Config.Builder()
          .setPageSize(pageSize)
          .setInitialLoadSizeHint(pageSize * 2)
          .setEnablePlaceholders(false)
          .build()
+   }
+
+   fun setQuery(query: String) {
+      sourceFactory = DataSourceFactory(NYNewsApi.getService(), compositeDisposable, query)
       newsList = LivePagedListBuilder<Long, NewsObj>(sourceFactory, config).build()
    }
 
@@ -38,11 +43,15 @@ class NewsListViewModel : ViewModel() {
       sourceFactory.newsDataSourceLiveData.value!!.invalidate()
    }
 
-   fun getNetworkState(): LiveData<NetworkState> = Transformations.switchMap<NewsFeedDatasource, NetworkState>(
-      sourceFactory.newsDataSourceLiveData, { it.networkState })
+   fun getNetworkState(): LiveData<NetworkState> = Transformations.switchMap<NewsFeedDatasource,
+      NetworkState>(sourceFactory.newsDataSourceLiveData) {
+      it.networkState
+   }
 
-   fun getRefreshState(): LiveData<NetworkState> = Transformations.switchMap<NewsFeedDatasource, NetworkState>(
-      sourceFactory.newsDataSourceLiveData, { it.initialLoad })
+   fun getRefreshState(): LiveData<NetworkState> = Transformations.switchMap<NewsFeedDatasource,
+      NetworkState>(sourceFactory.newsDataSourceLiveData) {
+      it.initialLoad
+   }
 
    override fun onCleared() {
       super.onCleared()

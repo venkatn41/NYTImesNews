@@ -1,23 +1,16 @@
 package com.example.venkatnutalapati.nytimesnews.screens.newsList.list
 
-import android.arch.paging.PagedList
 import android.arch.paging.PagedListAdapter
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
-import android.util.Log
-import android.view.View
 import android.view.ViewGroup
 import com.example.venkatnutalapati.nytimesnews.R
 import com.example.venkatnutalapati.nytimesnews.models.NewsObj
-import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.subjects.PublishSubject
-import java.util.ArrayList
-
 
 class NewsListAdapter(private val retryCallback: () -> Unit)
    : PagedListAdapter<NewsObj, RecyclerView.ViewHolder>(UserDiffCallback) {
 
-   lateinit var newHolder: NewsListViewHolder
    internal val clickSubjectAdapter = PublishSubject.create<NewsObj>()
 
    private var networkState: NetworkState? = null
