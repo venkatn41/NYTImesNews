@@ -6,5 +6,3 @@
 - Implemented infinitable scrollable list with **Paging library**.
 
 - Used Retrofit for network calls.
-
-- Used RxJava.
